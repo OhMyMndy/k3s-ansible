@@ -1,0 +1,23 @@
+---
+# Default variables for prereqs role
+# These can be overridden in group_vars/all.yml
+
+required_packages:
+  - curl
+  - wget
+  - apt-transport-https
+  - ca-certificates
+  - gnupg
+  - lsb-release
+
+required_kernel_modules:
+  - br_netfilter
+  - overlay
+  - ip_tables
+  - iptable_nat
+  - iptable_filter
+
+sysctl_config:
+  net.bridge.bridge-nf-call-iptables: 1
+  net.bridge.bridge-nf-call-ip6tables: 1
+  net.ipv4.ip_forward: 1

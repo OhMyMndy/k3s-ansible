@@ -1,0 +1,38 @@
+---
+# K3s Agent (Worker Node) Installation
+
+- name: Check if k3s-agent is already installed
+  stat:
+    path: /usr/local/bin/k3s
+  register: k3s_binary
+
+- name: Get k3s token from server
+  set_fact:
+    k3s_token: "{{ hostvars['k3s_token_holder']['k3s_token'] }}"
+
+- name: Download k3s install script
+  get_url:
+    url: https://get.k3s.io
+    dest: /tmp/k3s-install.sh
+    mode: '0755'
+  when: not k3s_binary.stat.exists
+
+- name: Install k3s agent
+  environment:
+    INSTALL_K3S_VERSION: "{{ k3s_version }}"
+    K3S_URL: "{{ k3s_server_url }}"
+    K3S_TOKEN: "{{ k3s_token }}"
+  command: /tmp/k3s-install.sh
+  args:
+    creates: /usr/local/bin/k3s
+  when: not k3s_binary.stat.exists
+
+- name: Enable and start k3s-agent service
+  systemd:
+    name: k3s-agent
+    enabled: yes
+    state: started
+
+- name: Wait for agent to register with server
+  pause:
+    seconds: 30

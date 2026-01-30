@@ -1,0 +1,69 @@
+---
+# Prerequisites for K3s with Cilium
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_os_family == "Debian"
+
+- name: Install required packages
+  apt:
+    name: "{{ required_packages }}"
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Disable swap
+  command: swapoff -a
+  changed_when: false
+
+- name: Remove swap from fstab
+  lineinfile:
+    path: /etc/fstab
+    regexp: '^.*swap.*$'
+    state: absent
+
+- name: Load required kernel modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ required_kernel_modules }}"
+
+- name: Ensure kernel modules load on boot
+  copy:
+    dest: /etc/modules-load.d/k3s-cilium.conf
+    content: |
+      {% for module in required_kernel_modules %}
+      {{ module }}
+      {% endfor %}
+    mode: '0644'
+
+- name: Configure sysctl settings
+  sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_file: /etc/sysctl.d/99-k3s-cilium.conf
+    reload: yes
+  loop: "{{ sysctl_config | dict2items }}"
+
+- name: Disable UFW firewall (if present)
+  ufw:
+    state: disabled
+  ignore_errors: yes
+
+- name: Ensure /etc/rancher/k3s directory exists
+  file:
+    path: /etc/rancher/k3s
+    state: directory
+    mode: '0755'
+
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Add cluster hosts to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ hostvars[item]['ansible_host'] }} {{ item }}"
+    state: present
+  loop: "{{ groups['k3s_cluster'] }}"

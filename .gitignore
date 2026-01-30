@@ -1,0 +1,31 @@
+# Ansible
+*.retry
+/kubeconfig
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets - never commit these!
+*.pem
+*.key
+secrets.yml
+vault.yml
+**/secrets/

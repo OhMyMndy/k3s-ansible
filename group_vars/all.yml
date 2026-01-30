@@ -1,0 +1,44 @@
+---
+# K3s Configuration
+k3s_version: "v1.29.0+k3s1"
+k3s_server_url: "https://{{ hostvars[groups['k3s_server'][0]]['ansible_host'] }}:6443"
+
+# Cluster networking
+cluster_cidr: "10.42.0.0/16"
+service_cidr: "10.43.0.0/16"
+
+# Cilium Configuration
+cilium_version: "1.15.0"
+cilium_helm_repo: "https://helm.cilium.io/"
+
+# K3s install options (disable flannel since we use Cilium)
+k3s_server_extra_args: >-
+  --flannel-backend=none
+  --disable-network-policy
+  --disable=traefik
+  --cluster-cidr={{ cluster_cidr }}
+  --service-cidr={{ service_cidr }}
+
+# System requirements
+required_packages:
+  - curl
+  - wget
+  - apt-transport-https
+  - ca-certificates
+  - gnupg
+  - lsb-release
+
+# Kernel modules required for Cilium
+required_kernel_modules:
+  - br_netfilter
+  - overlay
+  - ip_tables
+  - iptable_nat
+  - iptable_filter
+
+# Sysctl settings
+sysctl_config:
+  net.bridge.bridge-nf-call-iptables: 1
+  net.bridge.bridge-nf-call-ip6tables: 1
+  net.ipv4.ip_forward: 1
+  net.ipv6.conf.all.forwarding: 1

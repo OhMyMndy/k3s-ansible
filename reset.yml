@@ -1,0 +1,51 @@
+---
+# Reset/Uninstall K3s Playbook
+# Usage: ansible-playbook reset.yml
+# WARNING: This will completely remove k3s and all data!
+
+- name: Reset K3s cluster
+  hosts: k3s_cluster
+  become: true
+  tasks:
+    - name: Check if k3s-uninstall script exists (server)
+      stat:
+        path: /usr/local/bin/k3s-uninstall.sh
+      register: k3s_server_uninstall
+
+    - name: Check if k3s-agent-uninstall script exists
+      stat:
+        path: /usr/local/bin/k3s-agent-uninstall.sh
+      register: k3s_agent_uninstall
+
+    - name: Uninstall k3s server
+      command: /usr/local/bin/k3s-uninstall.sh
+      when: k3s_server_uninstall.stat.exists
+      ignore_errors: yes
+
+    - name: Uninstall k3s agent
+      command: /usr/local/bin/k3s-agent-uninstall.sh
+      when: k3s_agent_uninstall.stat.exists
+      ignore_errors: yes
+
+    - name: Remove k3s directories
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/rancher
+        - /var/lib/rancher
+        - /var/lib/kubelet
+        - /etc/cni
+        - /var/lib/cni
+        - /var/log/pods
+        - /var/log/containers
+
+    - name: Remove CNI binaries
+      file:
+        path: /opt/cni/bin
+        state: absent
+
+    - name: Reboot nodes (optional - uncomment if needed)
+      reboot:
+        reboot_timeout: 300
+      when: false  # Set to true to enable reboot
