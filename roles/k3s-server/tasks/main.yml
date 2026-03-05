@@ -1,6 +1,28 @@
 ---
 # K3s Server (Control Plane) Installation
 
+- name: Manifests dir
+  ansible.builtin.file:
+    path: /var/lib/rancher/k3s/server/manifests
+    mode: "0700"
+    state: directory
+    recurse: true
+  when: k3s_traefik == "true"
+
+- name: Traefik config
+  ansible.builtin.template:
+    src: traefik-config.yaml
+    dest: /var/lib/rancher/k3s/server/manifests/traefik-config.yaml
+    mode: "0600"
+  when: k3s_traefik == "true"
+
+- name: Traefik CRDs config
+  ansible.builtin.template:
+    src: traefik-crd-config.yaml
+    dest: /var/lib/rancher/k3s/server/manifests/traefik-crd-config.yaml
+    mode: "0600"
+  when: k3s_traefik == "true"
+
 - name: Check if k3s is already installed
   stat:
     path: /usr/local/bin/k3s
@@ -62,7 +84,7 @@
   copy:
     src: /etc/rancher/k3s/k3s.yaml
     dest: "/home/{{ ansible_user }}/.kube/config"
-    remote_src: yes
+    remote_src: true
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: '0600'
@@ -77,4 +99,4 @@
   fetch:
     src: "/home/{{ ansible_user }}/.kube/config"
     dest: "./kubeconfig"
-    flat: yes
+    flat: true

@@ -4,7 +4,7 @@
 - name: Check if Helm is installed
   command: which helm
   register: helm_check
-  ignore_errors: yes
+  ignore_errors: true
   changed_when: false
 
 - name: Download Helm install script

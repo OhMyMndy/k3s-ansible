@@ -1,5 +1,5 @@
 ---
 # Default variables for Cilium role
 
-cilium_version: "1.15.0"
+cilium_version: "1.19.1"
 cilium_helm_repo: "https://helm.cilium.io/"

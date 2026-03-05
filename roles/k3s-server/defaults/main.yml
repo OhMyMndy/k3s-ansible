@@ -1,9 +1,11 @@
 ---
 # Default variables for k3s-server role
 
-k3s_version: "v1.29.0+k3s1"
+k3s_version: "v1.34.4+k3s1"
 
 k3s_server_extra_args: >-
   --flannel-backend=none
   --disable-network-policy
-  --disable=traefik
+  --write-kubeconfig-mode 744
+
+k3s_traefik: "true"

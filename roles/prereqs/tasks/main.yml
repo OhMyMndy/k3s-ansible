@@ -3,15 +3,15 @@
 
 - name: Update apt cache
   apt:
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 3600
-  when: ansible_os_family == "Debian"
+  when: ansible_facts['os_family'] == "Debian"
 
 - name: Install required packages
   apt:
     name: "{{ required_packages }}"
     state: present
-  when: ansible_os_family == "Debian"
+  when: ansible_facts['os_family'] == "Debian"
 
 - name: Disable swap
   command: swapoff -a
@@ -43,13 +43,12 @@
     name: "{{ item.key }}"
     value: "{{ item.value }}"
     sysctl_file: /etc/sysctl.d/99-k3s-cilium.conf
-    reload: yes
+    reload: true
   loop: "{{ sysctl_config | dict2items }}"
 
 - name: Disable UFW firewall (if present)
   ufw:
     state: disabled
-  ignore_errors: yes
 
 - name: Ensure /etc/rancher/k3s directory exists
   file:

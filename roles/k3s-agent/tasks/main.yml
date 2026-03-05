@@ -30,7 +30,7 @@
 - name: Enable and start k3s-agent service
   systemd:
     name: k3s-agent
-    enabled: yes
+    enabled: true
     state: started
 
 - name: Wait for agent to register with server
