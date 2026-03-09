@@ -84,8 +84,8 @@ kubectl -n kube-system get pods
 | Role | Description |
 |------|-------------|
 | `prereqs` | System preparation (packages, kernel modules, sysctl) |
-| `k3s-server` | K3s control plane installation |
-| `k3s-agent` | K3s worker node installation |
+| `k3s_server` | K3s control plane installation |
+| `k3s_agent` | K3s worker node installation |
 | `cilium` | Cilium CNI installation via Helm |
 
 ## Verification

@@ -12,13 +12,13 @@
   hosts: k3s_server
   become: true
   roles:
-    - k3s-server
+    - k3s_server
 
 - name: Install K3s agents (worker nodes)
   hosts: k3s_agents
   become: true
   roles:
-    - k3s-agent
+    - k3s_agent
 
 - name: Install Cilium CNI
   hosts: k3s_server
