@@ -1,0 +1,21 @@
+namespace: ohmymndy
+name: k3s_ansible
+version: "0.1.0"
+readme: README.md
+authors:
+  - "@jtway"
+  - Mandy Schoep @OhMyMndy 
+description: |
+  Ansible collection for installing k3s with Cilium
+license_file: COPYING
+tags:
+  - kubernetes
+  - k3s
+  - cilium
+  - traefik
+dependencies: {}
+repository: https://github.com/ohmymndy/k3s-ansible
+documentation: https://github.com/ohmymndy/k3s-ansible
+homepage: https://github.com/ohmymndy/k3s-ansible
+issues: https://github.com/ohmymndy/k3s-ansible/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc
+build_ignore: []
