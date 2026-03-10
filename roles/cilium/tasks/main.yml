@@ -2,7 +2,7 @@
 # Cilium CNI Installation
 
 - name: Check if Helm is installed
-  command: which helm
+  command: command -v helm
   register: helm_check
   ignore_errors: true
   changed_when: false
@@ -17,6 +17,11 @@
 - name: Install Helm
   command: /tmp/get_helm.sh
   when: helm_check.rc != 0
+
+- name: Install Helm Diff
+  kubernetes.core.helm_plugin:
+    plugin_path: "https://github.com/databus23/helm-diff"
+    state: present
 
 - name: Add Cilium Helm repository
   kubernetes.core.helm_repository:
