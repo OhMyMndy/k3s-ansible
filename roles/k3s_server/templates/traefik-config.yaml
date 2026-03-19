@@ -5,6 +5,13 @@ metadata:
   namespace: kube-system
 spec:
   valuesContent: |-
+{% if k3s_traefik_gateway == "true" %}
     providers:
       kubernetesGateway:
         enabled: true
+{% endif %}
+    ports:
+      web:
+        redirectTo: 
+          port: websecure
+          priority: 10

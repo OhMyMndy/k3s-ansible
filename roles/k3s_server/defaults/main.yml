@@ -9,3 +9,4 @@ k3s_server_extra_args: >-
   --write-kubeconfig-mode 744
 
 k3s_traefik: "true"
+k3s_traefik_gateway: "true"

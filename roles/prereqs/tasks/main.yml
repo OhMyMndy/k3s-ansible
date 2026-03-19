@@ -49,6 +49,7 @@
 - name: Disable UFW firewall (if present)
   ufw:
     state: disabled
+  when: ansible_facts['os_family'] == "Debian"
 
 - name: Ensure /etc/rancher/k3s directory exists
   file:

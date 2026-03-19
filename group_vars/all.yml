@@ -19,6 +19,7 @@ k3s_server_extra_args: >-
   --cluster-cidr={{ cluster_cidr }}
   --service-cidr={{ service_cidr }}
   --write-kubeconfig-mode 744
+  --tls-san {{ ansible_host }}
 
 # System requirements
 required_packages:

@@ -22,6 +22,7 @@
     INSTALL_K3S_VERSION: "{{ k3s_version }}"
     K3S_URL: "{{ k3s_server_url }}"
     K3S_TOKEN: "{{ k3s_token }}"
+    INSTALL_K3S_EXEC: "--node-external-ip={{ ansible_host }}"
   command: /tmp/k3s-install.sh
   args:
     creates: /usr/local/bin/k3s
